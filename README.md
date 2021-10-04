@@ -36,10 +36,11 @@ docker-compose up --build -d
 * edit mloader-download-source.sh with de desired titles
 * edit env variables in docker-compose-source.yml
 
-
+```bash
     environment:
       - SRC_REPO=https://github.com/darodi/mloader.git
       - BRANCH_NAME=develop
+```
 
 * Build and start the container
 
