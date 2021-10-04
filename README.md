@@ -11,7 +11,7 @@ to  download manga from mangaplus.shueisha.co.jp
 
 ### Installation
 
-* edit mloader-download.sh with de desired titles
+* edit mloader-download.sh with the desired titles
 * Build and start the container
 
 ```bash
@@ -33,7 +33,7 @@ docker-compose up --build -d
 * volume bind for mloader source code (and download directory inside it)
 
 ### Installation
-* edit mloader-download-source.sh with de desired titles
+* edit mloader-download-source.sh with the desired titles
 * edit env variables in docker-compose-source.yml
 
 ```bash
