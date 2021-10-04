@@ -23,9 +23,9 @@ ENV PATH=/root/.local:/root/.local/bin:$PATH
 RUN apt-get update && apt-get install -y \
   git \
   cron \
-  && rm -rf /var/lib/apt/lists/*
+  && rm -rf /var/lib/apt/lists/* \
+  && ln -s /usr/src/app/mloader-download.sh /etc/cron.daily/mloader-download
 
 ADD startup.sh /usr/src/app
-RUN ln -s /usr/src/app/mloader-download.sh /etc/cron.daily/mloader-download
 
 CMD /usr/src/app/startup.sh
