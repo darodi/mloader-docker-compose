@@ -1,0 +1,11 @@
+version: '3'
+
+services:
+  mloader:
+    build:
+      context: .
+    restart: unless-stopped
+    volumes:
+      - ./downloads:/usr/src/app/mloader_downloads
+      - ./mloader-download.sh:/usr/src/app/mloader-download.sh
+

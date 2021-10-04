@@ -1,0 +1,31 @@
+# first stage
+FROM python:3.8 AS builder
+
+ENV SRC_REPO=${SRC_REPO:-https://github.com/hurlenko/mloader.git}
+ENV BRANCH_NAME=${BRANCH_NAME:-master}
+
+# install dependencies to the local user directory (eg. /root/.local)
+RUN export SRC_REPO_PATH=${SRC_REPO#*github.com/} \
+   && export REQ_URL=https://raw.githubusercontent.com/${SRC_REPO_PATH%.git}/${BRANCH_NAME}/requirements.txt \
+   && wget $REQ_URL \
+   && pip install --user -r requirements.txt
+
+# second unnamed stage
+FROM python:3.8-slim
+WORKDIR /usr/src/app
+
+# copy only the dependencies installation from the first stage image
+COPY --from=builder /root/.local /root/.local
+
+# update PATH environment variable
+ENV PATH=/root/.local:/root/.local/bin:$PATH
+
+RUN apt-get update && apt-get install -y \
+  git \
+  cron \
+  && rm -rf /var/lib/apt/lists/*
+
+ADD startup.sh /usr/src/app
+RUN ln -s /usr/src/app/mloader-download.sh /etc/cron.daily/mloader-download
+
+CMD /usr/src/app/startup.sh
