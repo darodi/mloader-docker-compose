@@ -49,6 +49,7 @@ docker-compose -f docker-compose-source.yml up --build -d
 ```
 
 ### Updating
+* only needed if requirements.txt changes
 * Stop the containers: `docker-compose down && docker-compose rm`
 * Update docker scripts from git: git pull origin master and apply any necessary modifications to mloader-download-source.sh, docker-compose-source.yml
 * Rebuild and start the containers: `docker-compose -f docker-compose-source.yml up --build -d`
