@@ -1,55 +1,67 @@
 # mloader-docker-compose
 Mangaplus Downloader docker compose
 to  download manga from mangaplus.shueisha.co.jp
+with a scheduled cron
 
 
 ## docker from pip package
 
 * mloader in the container is the pip package
-* the crontab runs weekly
+* cron runs **weekly**
 * volume bind for downloads
-
-### Installation
-
-* edit mloader-download.sh with the desired titles
-* Build and start the container
-
-```bash
-docker-compose up --build -d
-```
-
-### Updating
-* only needed if mloader pip version changes
-* Stop the containers: `docker-compose down && docker-compose rm`
-* Update docker scripts from git: git pull origin master and apply any necessary modifications to mloader-download.sh
-* Rebuild and start the containers: `docker-compose up --build -d`
-
 
 
 ## docker from git sources
 
 * mloader updates from git repository on container restart
-* the crontab runs daily
-* volume bind for mloader source code (and download directory inside it)
+* cron runs **daily**
+* volume bind for downloads
 
-### Installation
-* edit mloader-download-source.sh with the desired titles
-* edit env variables in docker-compose-source.yml
+## Installation
+
+* edit cron.sh and replace MLOADER_TITLES with the desired titles : 
 
 ```bash
-    environment:
-      - SRC_REPO=https://github.com/darodi/mloader.git
-      - BRANCH_NAME=develop
+#### EDIT THE MLOADER_TITLES VARIABLE WITH THE DESIRED TITLES.
+
+# 700007 MASHLE
+# 700005 One Piece
+
+MLOADER_TITLES="-t 700007 -t 700005"
+```
+
+
+* create a .env file with your configuration. (copy .env-dist and edit values)
+
+```bash
+# This is only needed to use mloader from git sources, 
+# comment those 3 lines to use mloader pip package instead
+SRC_REPO=https://github.com/darodi/mloader.git
+BRANCH_NAME=develop
+DOCKER_FILE=source.Dockerfile
+
+#Define the UID and GID used for the download volume
+OWNER_UID=1000
+OWNER_GID=1000
+
+#might be needed if you have an old NAS
+#COMPOSE_HTTP_TIMEOUT=200
+```
+you can determine the UID GID with the command `id`
+
+```bash
+user@DESKTOP:/home/user$ id
+uid=1000(user) gid=1000(user)
 ```
 
 * Build and start the container
-
-```bash
-docker-compose -f docker-compose-source.yml up --build -d
-```
+`docker-compose up --build -d`
 
 ### Updating
-* only needed if requirements.txt changes
+* only needed 
+  * **build from pip package** : if mloader pip version changes
+  * **build from git sources** : if requirements.txt changes in git
 * Stop the containers: `docker-compose down && docker-compose rm`
-* Update docker scripts from git: git pull origin master and apply any necessary modifications to mloader-download-source.sh, docker-compose-source.yml
-* Rebuild and start the containers: `docker-compose -f docker-compose-source.yml up --build -d`
+* Update docker scripts from this git: git pull origin master and apply any necessary modifications to .env file 
+* Rebuild and start the container: `docker-compose up --build -d`
+

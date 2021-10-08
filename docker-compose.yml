@@ -2,10 +2,18 @@ version: '3'
 
 services:
   mloader:
+    image: darodi/mloader-docker-compose:0.1
+    env_file:
+      - .env
     build:
       context: .
+      dockerfile: ${DOCKER_FILE:-Dockerfile}
     restart: unless-stopped
     volumes:
-      - ./downloads:/usr/src/app/mloader_downloads
-      - ./mloader-download.sh:/usr/src/app/mloader-download.sh
+      - ./downloads:/usr/src/app/downloads
+      - ./cron.sh:/usr/src/app/cron.sh:ro
+      - source:/usr/src/app/mloader
+
+volumes:
+  source:
 
